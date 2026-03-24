@@ -47,11 +47,11 @@ An ERC-like NFT contract that:
 
 ## Contract Addresses (Arc Testnet)
 
-| Contract   | Address                              |
-| ---------- | ------------------------------------ |
-| FlowArc    | `— add your deployed address here —` |
-| PayslipNFT | `— add your deployed address here —` |
-| USDC       | `— add your USDC address here —`     |
+| Contract   | Address                                    |
+| ---------- | ------------------------------------------ |
+| FlowArc    | 0xC23047BdDCaeffAC332B32c95090341afE986954 |
+| PayslipNFT | 0x5468B8a06Bf904E7D27f75c329206B31d00d83B9 |
+| USDC       | 0x3600000000000000000000000000000000000000 |
 
 ---
 
