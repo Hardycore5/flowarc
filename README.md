@@ -1,66 +1,116 @@
-## Foundry
+# ⚡ FlowArc — Onchain Payroll Protocol
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+> Stream USDC salaries per second, manage workers trustlessly, and mint soulbound payslip NFTs — all onchain on Arc Testnet.
 
-Foundry consists of:
+---
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## What is FlowArc?
 
-## Documentation
+FlowArc is a decentralized payroll protocol built on the Arc Testnet. It allows employers to register their company, deposit USDC, add workers with monthly salaries, and let workers claim their earned salary in real time — calculated per second. Every salary claim automatically mints a **soulbound Payslip NFT** as an on-chain proof of payment.
 
-https://book.getfoundry.sh/
+---
 
-## Usage
+## Smart Contracts
+
+### `FlowArc.sol` — Core Payroll Contract
+
+The main contract that handles all payroll logic:
+
+- Employers register with a company name
+- Employers deposit USDC to fund payroll
+- Employers add workers with monthly salary amounts (converted to per-second streaming)
+- Workers claim their earned USDC at any time
+- On every claim, a PayslipNFT is minted automatically
+
+### `PayslipNFT.sol` — Soulbound Payslip NFT
+
+An ERC-like NFT contract that:
+
+- Mints a non-transferable (soulbound) NFT on every salary claim
+- Stores the employer address, worker address, amount paid, timestamp, and company name
+- Can only be minted by the FlowArc contract
+- Workers can view all their payslips on-chain
+
+---
+
+## Tech Stack
+
+| Layer                 | Technology                   |
+| --------------------- | ---------------------------- |
+| Smart Contracts       | Solidity ^0.8.30             |
+| Development Framework | Foundry (Forge, Cast, Anvil) |
+| Payment Token         | USDC                         |
+| Network               | Arc Testnet                  |
+| Testing               | Forge Test                   |
+
+---
+
+## Contract Addresses (Arc Testnet)
+
+| Contract   | Address                              |
+| ---------- | ------------------------------------ |
+| FlowArc    | `— add your deployed address here —` |
+| PayslipNFT | `— add your deployed address here —` |
+| USDC       | `— add your USDC address here —`     |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [Foundry](https://book.getfoundry.sh/) installed
+- An Arc Testnet RPC URL
+- A funded wallet on Arc Testnet
+
+### Installation
+
+```bash
+git clone https://github.com/Hardycore5/flowarc.git
+cd flowarc
+forge install
+```
 
 ### Build
 
-```shell
-$ forge build
+```bash
+forge build
 ```
 
 ### Test
 
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
+```bash
+forge test
 ```
 
 ### Deploy
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```bash
+forge script script/Deploy.s.sol --rpc-url <arc_testnet_rpc_url> --private-key <your_private_key> --broadcast
 ```
 
-### Cast
+---
 
-```shell
-$ cast <subcommand>
-```
+## How It Works
 
-### Help
+1. **Employer registers** → calls `registerEmployer("Company Name")`
+2. **Employer deposits USDC** → calls `depositFunds(amount)`
+3. **Employer adds worker** → calls `addWorker(workerAddress, "Name", monthlySalary)`
+4. **Worker claims salary** → calls `claimSalary(employerAddress)`
+   - Earned amount is calculated: `elapsed seconds × salary per second`
+   - USDC is transferred to worker
+   - A soulbound PayslipNFT is minted to the worker
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+---
+
+## Frontend
+
+The FlowArc frontend is available at a separate repository:
+
+🔗 [flowarc-frontend](https://github.com/Hardycore5/flowarc-frontend) — Live at [flowarc-frontend.vercel.app](https://flowarc-frontend.vercel.app)
+
+---
+
+## License
+
+MIT
