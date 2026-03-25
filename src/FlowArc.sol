@@ -43,6 +43,7 @@ contract FlowArc {
     // ─── Events ────────────────────────────────────────────────────────
     event EmployerRegistered(address indexed employer, string companyName);
     event WorkerAdded(address indexed employer, address indexed worker, string name, uint256 salaryPerSecond);
+    event WorkerReactivated(address indexed employer, address indexed worker, string name);
     event WorkerRemoved(address indexed employer, address indexed worker);
     event FundsDeposited(address indexed employer, uint256 amount);
     event FundsWithdrawn(address indexed employer, uint256 amount);
@@ -111,17 +112,30 @@ contract FlowArc {
         require(workerAddress != address(0), "Invalid worker address");
 
         uint256 salaryPerSecond = monthlySalary / (30 days);
+        Worker storage worker = workers[msg.sender][workerAddress];
 
-        workers[msg.sender][workerAddress] = Worker({
-            name:            name,
-            salaryPerSecond: salaryPerSecond,
-            lastClaimed:     block.timestamp,
-            startTime:       block.timestamp,
-            active:          true
-        });
+        bool isReactivation = worker.startTime != 0;
 
-        employerWorkers[msg.sender].push(workerAddress);
-        emit WorkerAdded(msg.sender, workerAddress, name, salaryPerSecond);
+        if (isReactivation) {
+            // ── Reactivation: preserve lastClaimed so earnings continue
+            // from the moment they were removed, not reset to now
+            worker.name            = name;
+            worker.salaryPerSecond = salaryPerSecond;
+            worker.lastClaimed     = block.timestamp; // start fresh from reactivation moment
+            worker.active          = true;
+            emit WorkerReactivated(msg.sender, workerAddress, name);
+        } else {
+            // ── Brand new worker
+            workers[msg.sender][workerAddress] = Worker({
+                name:            name,
+                salaryPerSecond: salaryPerSecond,
+                lastClaimed:     block.timestamp,
+                startTime:       block.timestamp,
+                active:          true
+            });
+            employerWorkers[msg.sender].push(workerAddress);
+            emit WorkerAdded(msg.sender, workerAddress, name, salaryPerSecond);
+        }
     }
 
     function removeWorker(address workerAddress) external onlyRegisteredEmployer {
