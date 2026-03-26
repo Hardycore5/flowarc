@@ -112,6 +112,7 @@ contract FlowArc {
         require(workerAddress != address(0), "Invalid worker address");
 
         uint256 salaryPerSecond = monthlySalary / (30 days);
+    require(salaryPerSecond > 0, "Salary too low - minimum 3 USDC/month");
         Worker storage worker = workers[msg.sender][workerAddress];
 
         bool isReactivation = worker.startTime != 0;

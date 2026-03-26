@@ -49,7 +49,7 @@ An ERC-like NFT contract that:
 
 | Contract   | Address                                    |
 | ---------- | ------------------------------------------ |
-| FlowArc    | 0x9F3bbf462dee5A0242786fd47037F96ABa82Ad5a |
+| FlowArc    | 0x13120b7D8E0baaf49E21435609BE2459Ec851B67 |
 | PayslipNFT | 0x5468B8a06Bf904E7D27f75c329206B31d00d83B9 |
 | USDC       | 0x3600000000000000000000000000000000000000 |
 
